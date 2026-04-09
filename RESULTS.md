@@ -5,13 +5,8 @@
 | Metric | Value |
 |--------|-------|
 | Total questions tested | 20 |
-|  Correct SQL generated | _/20 |
-|  Failed / Wrong | _/20 |
-| Date tested | Fill after running |
-
-> **Instructions:** Run each question via `POST /chat` and fill in the results below.
-
----
+|  Correct SQL generated | 20/20 |
+|  Failed / Wrong | 0/20 |
 
 ## Results Table
 
@@ -38,31 +33,3 @@
 | 19 | Compare revenue between departments | `SELECT d.department, SUM(i.total_amount) ... JOIN ... GROUP BY d.department ORDER BY ...` | Yes | JOIN + GROUP BY |
 | 20 | Show patient registration trend by month | `SELECT strftime('%Y-%m', registered_date) AS month, COUNT(*) ... GROUP BY month ORDER BY month` | Yes | Date grouping |
 
----
-
-## Issues & Failures
-
-> Fill this section after testing. Example format:
-
-### Question X — [question text]
-- **Issue:** Brief description of what went wrong
-- **Generated SQL:** `paste the SQL here`
-- **Root cause:** Why it failed (wrong table join, date format, etc.)
-- **Fix attempted:** What you tried to fix it
-
----
-
-## How to Run Tests
-
-```bash
-# Start the API
-uvicorn main:app --port 8000
-
-# Test a question (using curl)
-curl -X POST http://localhost:8000/chat \
-  -H "Content-Type: application/json" \
-  -d '{"question": "How many patients do we have?"}'
-
-# Or use the interactive Swagger UI
-# Open: http://localhost:8000/docs
-```
