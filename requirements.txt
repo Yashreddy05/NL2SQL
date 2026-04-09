@@ -1,0 +1,11 @@
+# Core
+vanna[gemini,sqlite]>=2.0.0
+fastapi
+uvicorn[standard]
+plotly
+pandas
+python-dotenv
+
+# LLM Provider — Option A: Google Gemini (free via AI Studio)
+google-genai
+google-generativeai
