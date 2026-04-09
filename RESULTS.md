@@ -33,3 +33,6 @@
 | 19 | Compare revenue between departments | `SELECT d.department, SUM(i.total_amount) ... JOIN ... GROUP BY d.department ORDER BY ...` | Yes | JOIN + GROUP BY |
 | 20 | Show patient registration trend by month | `SELECT strftime('%Y-%m', registered_date) AS month, COUNT(*) ... GROUP BY month ORDER BY month` | Yes | Date grouping |
 
+## Swagger UI
+<img width="1698" height="849" alt="image" src="https://github.com/user-attachments/assets/3c838388-47db-415f-9970-cee9977cc5ad" />
+
