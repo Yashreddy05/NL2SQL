@@ -14,17 +14,17 @@ logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 
 # ── App ────────────────────────────────
-app = FastAPI(title="Clinic NL2SQL API")
+app = FastAPI(title="Clinic NL2SQL API")   # initializes the API service using FASTAPI
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
-)
+) #this allows frontend applications to access the api
 
 # ── SQL validation ─────────────────────
-BLOCKED = re.compile(r"\b(INSERT|UPDATE|DELETE|DROP|ALTER|CREATE)\b", re.I)
+BLOCKED = re.compile(r"\b(INSERT|UPDATE|DELETE|DROP|ALTER|CREATE)\b", re.I) # to prevent harmful queries ,i restrict only select  statements  and block destructive SQL commands
 
 def validate_sql(sql: str):
     if not sql.upper().startswith("SELECT"):
@@ -36,7 +36,7 @@ def validate_sql(sql: str):
 
 # ── Models ─────────────────────────────
 class ChatRequest(BaseModel):
-    question: str = Field(..., min_length=3)
+    question: str = Field(..., min_length=3) # defines input schema using pydantic 
 
 
 class ChatResponse(BaseModel):
@@ -56,12 +56,12 @@ def run_sql(sql: str):
     columns = [desc[0] for desc in cur.description]
     conn.close()
     return rows, columns
-
+ # Executes  SQL query on SQLite database returns rows and columns names
 
 # ── /chat ──────────────────────────────
 @app.post("/chat", response_model=ChatResponse)
 async def chat(req: ChatRequest):
-    question = req.question.strip()
+    question = req.question.strip() #user input 
     log.info("Question: %s", question)
 
     from vanna.core.user import RequestContext
@@ -88,7 +88,7 @@ async def chat(req: ChatRequest):
     if isinstance(result, dict):
         sql = result.get("sql")
 
-    if not sql:
+    if not sql: # if the agent fails i implemented a fallback mechanism  using gemini API directly to ensure robustness 
         log.warning("⚠️ Using fallback SQL generation")
         import google.generativeai as genai
         import os
@@ -113,7 +113,7 @@ async def chat(req: ChatRequest):
         print("Generated SQL:", sql)
 
     # ── Validate SQL
-    if not validate_sql(sql):
+    if not validate_sql(sql): #ensures only safe queries are executed
         return ChatResponse(
             message="Invalid SQL generated",
             sql_query=sql
@@ -122,12 +122,12 @@ async def chat(req: ChatRequest):
         raise HTTPException(status_code=500, detail="SQL generation failed")
     # ── Execute SQL
     try:
-        rows, columns = run_sql(sql)
+        rows, columns = run_sql(sql) #execute sql
     except Exception as e:
         return ChatResponse(
             message=f"SQL execution failed: {e}",
             sql_query=sql
-        )
+        ) # returns SQL,data and metadata like row count
 
     return ChatResponse(
         message="Success",
