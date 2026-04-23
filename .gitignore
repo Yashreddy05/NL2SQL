@@ -2,7 +2,7 @@
 p/
 venv/
 env/
-
+clinic.db
 # python
 __pycache__/
 *.pyc
